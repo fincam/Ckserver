@@ -1,0 +1,12 @@
+sudo apt-get install python python-pip python-dev libmysqlclient-dev python-mysql.connector python3-mysql.connector -y
+sudo apt-get install mariadb-server -y
+sudo mysql
+CREATE USER 'chooseAUserName'@'localhost' IDENTIFIED BY 'chooseAPassword';
+GRANT ALL PRIVILEGES ON *.* TO 'chooseAUserName'@'localhost' WITH GRANT OPTION;
+exit
+pip install flask
+pip install flask-sqlalchemy
+pip install flask-login
+pip install passlib
+sudo mysql
+CREATE DATABASE Login;

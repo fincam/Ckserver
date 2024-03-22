@@ -25,7 +25,7 @@ def do_login():
         session['logged_in'] = True
         session['role'] = user[4]  # Get user role from database
         session['user_id'] = user[0] # Get user_id from database
-        session['username']=user[1] # Get username from database
+        session['username'] = user[1] # Get username from database
         return redirect('/dashboard')
     else:
         flash('Invalid username or password')
@@ -73,9 +73,6 @@ def register():
         return redirect('/')
     
     return render_template('register.html')
-
-
-    
 
 @app.route('/dashboard')
 def dashboard():
@@ -136,8 +133,5 @@ def transfer_money():
     flash(f'Successfully transferred {amount} to {recipient}.')
     return redirect('/dashboard')
 
-
-
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port='5000')
-

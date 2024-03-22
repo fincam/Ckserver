@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, flash
 from passlib.hash import sha256_crypt
 import mysql.connector as mariadb
+import re
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'

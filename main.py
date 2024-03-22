@@ -34,8 +34,10 @@ def do_login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        name=request.form['name']
         username = request.form['username']
         password = request.form['password']
+        grade = request.form['grade']
         email = request.form['email']
         role = request.form['role']
 

@@ -1,6 +1,22 @@
 from flask import Flask, render_template, request, redirect, session, flash
 from passlib.hash import sha256_crypt
 import mysql.connector as mariadb
+import re
+
+
+def validate_password(password):
+    # Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character, and be at least 8 characters long.
+    if len(password) < 8:
+        return False
+    if not re.search("[a-z]", password):
+        return False
+    if not re.search("[A-Z]", password):
+        return False
+    if not re.search("[0-9]", password):
+        return False
+    if not re.search("[!@#$%^&*]", password):
+        return False
+    return True
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'

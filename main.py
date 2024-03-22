@@ -37,6 +37,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
+        role = request.form['role'] # Retrieve role from form
         
         # Check for duplicate username in the database
         cur = mariadb_connection.cursor(buffered=True)
@@ -55,7 +56,7 @@ def register():
         hashed_password = sha256_crypt.encrypt(password)
         
         # Insert new user into the Login table
-        cur.execute('INSERT INTO Login (username, password, email) VALUES (%s, %s, %s)', (username, hashed_password, email))
+        cur.execute('INSERT INTO Login (username, password, email, role) VALUES (%s, %s, %s, %s)', (username, hashed_password, email, role))
         mariadb_connection.commit()
         
         # Retrieve the uid of the newly inserted user
@@ -65,7 +66,7 @@ def register():
         # Insert the new user into the UserBalance table
         cur.execute('INSERT INTO UserBalance (uid, username) VALUES (%s, %s)', (uid, username))
         mariadb_connection.commit()
-        #
+        
         cur.close()
         
         flash('Registration successful! Please log in.')
@@ -74,20 +75,7 @@ def register():
     return render_template('register.html')
 
 
-
-        # Encrypt the password
-        hashed_password = sha256_crypt.encrypt(password)
-        cur.execute('INSERT INTO UserBalance (username, balance) VALUES (%s, %s)',(username, 10))
-        # Insert new user into the database
-        cur.execute('INSERT INTO Login (username, password, email, role) VALUES (%s, %s, %s, %s)', (username, hashed_password, email, role))
-        mariadb_connection.commit()
-        cur.close()
-        
-        flash('Registration successful! Please log in.')
-        return redirect('/')
-
-    return render_template('register.html')
-
+    
 
 @app.route('/dashboard')
 def dashboard():

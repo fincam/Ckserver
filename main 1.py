@@ -47,9 +47,10 @@ def register():
             flash('Username already exists!')
             return redirect('/register')
 
+
         # Encrypt the password
         hashed_password = sha256_crypt.encrypt(password)
-        cur.execute('INSERT INTO balance (username, balance) VALUES (%s, %s)',(username, 10))
+        cur.execute('INSERT INTO UserBalance (username, balance) VALUES (%s, %s)',(username, 10))
         # Insert new user into the database
         cur.execute('INSERT INTO Login (username, password, email, role) VALUES (%s, %s, %s, %s)', (username, hashed_password, email, role))
         mariadb_connection.commit()
@@ -59,9 +60,6 @@ def register():
         return redirect('/')
 
     return render_template('register.html')
-
-
-
 
 
 @app.route('/dashboard')

@@ -34,8 +34,10 @@ def do_login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        name=request.form['name']
         username = request.form['username']
         password = request.form['password']
+        grade = request.form['grade']
         email = request.form['email']
         role = request.form['role']
 
@@ -126,5 +128,5 @@ def transfer_money():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port='5000')
+    app.run(debug=True, host='0.0.0.0', port='80')
 

@@ -65,7 +65,7 @@ def register():
         # Insert the new user into the UserBalance table
         cur.execute('INSERT INTO UserBalance (uid, username) VALUES (%s, %s)', (uid, username))
         mariadb_connection.commit()
-        
+        #
         cur.close()
         
         flash('Registration successful! Please log in.')

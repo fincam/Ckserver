@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+</head>
+<body>
+    <h1>Teacher Dashboard</h1>
+    <form action="/reward_deduct" method="POST">
+        <label for="student">Select student:</label>
+        <select id="student" name="student">
+            <option value="student1">Student 1</option>
+            <option value="student2">Student 2</option>
+            <!-- Add more options dynamically -->
+        </select>
+        <label for="action">Action:</label>
+        <input type="text" id="action" name="action" required>
+        <button type="submit">Reward/Deduct</button>
+    </form>
+</body>
+</html>

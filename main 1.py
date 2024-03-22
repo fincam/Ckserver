@@ -37,15 +37,42 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-        role = request.form['role']
-
+        
+        # Check for duplicate username in the database
         cur = mariadb_connection.cursor(buffered=True)
-        # Check if the username already exists
         cur.execute('SELECT * FROM Login WHERE username=%s', (username,))
         existing_user = cur.fetchone()
         if existing_user:
             flash('Username already exists!')
             return redirect('/register')
+        
+        # Validate password format
+        if not validate_password(password):
+            flash('Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character, and be at least 8 characters long.')
+            return redirect('/register')
+        
+        # Encrypt the password
+        hashed_password = sha256_crypt.encrypt(password)
+        
+        # Insert new user into the Login table
+        cur.execute('INSERT INTO Login (username, password, email) VALUES (%s, %s, %s)', (username, hashed_password, email))
+        mariadb_connection.commit()
+        
+        # Retrieve the uid of the newly inserted user
+        cur.execute('SELECT uid FROM Login WHERE username=%s', (username,))
+        uid = cur.fetchone()[0]
+        
+        # Insert the new user into the UserBalance table
+        cur.execute('INSERT INTO UserBalance (uid, username) VALUES (%s, %s)', (uid, username))
+        mariadb_connection.commit()
+        
+        cur.close()
+        
+        flash('Registration successful! Please log in.')
+        return redirect('/')
+    
+    return render_template('register.html')
+
 
 
         # Encrypt the password

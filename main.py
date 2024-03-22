@@ -1,22 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, flash
 from passlib.hash import sha256_crypt
 import mysql.connector as mariadb
-import re
-
-
-def validate_password(password):
-    # Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character, and be at least 8 characters long.
-    if len(password) < 8:
-        return False
-    if not re.search("[a-z]", password):
-        return False
-    if not re.search("[A-Z]", password):
-        return False
-    if not re.search("[0-9]", password):
-        return False
-    if not re.search("[!@#$%^&*]", password):
-        return False
-    return True
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -41,7 +25,7 @@ def do_login():
         session['logged_in'] = True
         session['role'] = user[4]  # Get user role from database
         session['user_id'] = user[0] # Get user_id from database
-        session['username'] = user[1] # Get username from database
+        session['username']=user[1] # Get username from database
         return redirect('/dashboard')
     else:
         flash('Invalid username or password')
@@ -53,42 +37,32 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-        role = request.form['role'] # Retrieve role from form
-        
-        # Check for duplicate username in the database
+        role = request.form['role']
+
         cur = mariadb_connection.cursor(buffered=True)
+        # Check if the username already exists
         cur.execute('SELECT * FROM Login WHERE username=%s', (username,))
         existing_user = cur.fetchone()
         if existing_user:
             flash('Username already exists!')
             return redirect('/register')
-        
-        # Validate password format
-        if not validate_password(password):
-            flash('Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character, and be at least 8 characters long.')
-            return redirect('/register')
-        
+
         # Encrypt the password
         hashed_password = sha256_crypt.encrypt(password)
-        
-        # Insert new user into the Login table
+        cur.execute('INSERT INTO balance (username, balance) VALUES (%s, %s)',(username, 10))
+        # Insert new user into the database
         cur.execute('INSERT INTO Login (username, password, email, role) VALUES (%s, %s, %s, %s)', (username, hashed_password, email, role))
         mariadb_connection.commit()
-        
-        # Retrieve the uid of the newly inserted user
-        cur.execute('SELECT uid FROM Login WHERE username=%s', (username,))
-        uid = cur.fetchone()[0]
-        
-        # Insert the new user into the UserBalance table
-        cur.execute('INSERT INTO UserBalance (uid, username) VALUES (%s, %s)', (uid, username))
-        mariadb_connection.commit()
-        
         cur.close()
         
         flash('Registration successful! Please log in.')
         return redirect('/')
-    
+
     return render_template('register.html')
+
+
+
+
 
 @app.route('/dashboard')
 def dashboard():
@@ -149,5 +123,8 @@ def transfer_money():
     flash(f'Successfully transferred {amount} to {recipient}.')
     return redirect('/dashboard')
 
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port='5000')
+

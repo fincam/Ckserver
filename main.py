@@ -51,7 +51,7 @@ def register():
         hashed_password = sha256_crypt.encrypt(password)
         #cur.execute('INSERT INTO UserBalance (username, balance) VALUES (%s, %s)',(username, 10))
         # Insert new user into the database
-        cur.execute('INSERT INTO Login (username, password, email, role, balance) VALUES (%s, %s, %s, %s %s)', (username, hashed_password, email, role, 10))
+        cur.execute('INSERT INTO Login (username, password, email, role, balance) VALUES (%s, %s, %s, %s, %s)', (username, hashed_password, email, role, 0))
         mariadb_connection.commit()
         cur.close()
         

@@ -22,11 +22,10 @@ def do_login():
     cur.execute('SELECT * FROM Login WHERE username=%s', (username,))
     user = cur.fetchone()
 
-    if user and sha256_crypt.verify(password, user[2]):
+    if user and sha256_crypt.verify(password, user[1]):
         session['logged_in'] = True
-        session['role'] = user[4]  # Get user role from database
-        session['user_id'] = user[0] # Get user_id from database
-        session['username']=user[1] # Get username from database
+        session['role'] = user[3]  # Get user role from database
+        session['username']=user[0] # Get username from database
         return redirect('/dashboard')
     else:
         flash('Invalid username or password')

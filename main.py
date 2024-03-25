@@ -53,7 +53,7 @@ def register():
         hashed_password = sha256_crypt.encrypt(password)
         #cur.execute('INSERT INTO UserBalance (username, balance) VALUES (%s, %s)',(username, 10))
         # Insert new user into the database
-        cur.execute('INSERT INTO Login (username, password, email, role, balance) VALUES (%s, %s, %s, %s, %s)', (username, hashed_password, email, role, 0))
+        cur.execute('INSERT INTO Login (name, username, password, email, role, balance, grade) VALUES (%s, %s, %s, %s, %s, %s, %s)', (name, username, hashed_password, email, role, 0, grade))
         mariadb_connection.commit()
         cur.close()
         
@@ -87,14 +87,16 @@ def transfer_money():
 
     recipient = request.form['recipient']
     amount = int(request.form['amount'])
+    print(amount)
 
     # Retrieve current user's balance
     cur = mariadb_connection.cursor(buffered=True)
-    cur.execute('SELECT balance FROM transaction WHERE username = %s', (session['username'],))
+    cur.execute('SELECT balance FROM Login WHERE username = %s', (session['username'],))
     current_balance = int(str(cur.fetchone()[0]))
-
+    print(current_balance)
+    
     # Check if the recipient exists
-    cur.execute('SELECT * FROM transaction WHERE username = %s', (recipient,))
+    cur.execute('SELECT * FROM Login WHERE username = %s', (recipient,))
     recipient_data = cur.fetchone()
 
     if not recipient_data:
@@ -102,19 +104,21 @@ def transfer_money():
         return redirect('/dashboard')
 
     # Check if the user has sufficient balance to transfer
-    if amount > current_balance:
+    if amount > current_balance and session['role'] != 'Teacher':
         flash('Insufficient balance to transfer.')
+        print('brokie')
         return redirect('/dashboard')
 
     # Update sender's balance
     new_balance_sender = current_balance - int(amount)
-    cur.execute('UPDATE transaction SET balance = %s WHERE username = %s', (new_balance_sender, session['username']))
+    cur.execute('UPDATE Login SET balance = %s WHERE username = %s', (new_balance_sender, session['username']))
+    print('SET: %s WHERE: %s', (new_balance_sender, session['username'] ))
 
     # Update recipient's balance
-    cur.execute('SELECT balance FROM transaction WHERE username = %s', (recipient,))
+    cur.execute('SELECT balance FROM Login WHERE username = %s', (recipient,))
     recipient_balance = int(str(cur.fetchone()[0]))
     new_balance_recipient = recipient_balance + int(amount)
-    cur.execute('UPDATE transaction SET balance = %s WHERE username = %s', (new_balance_recipient, recipient))
+    cur.execute('UPDATE Login SET balance = %s WHERE username = %s', (new_balance_recipient, recipient))
 
     # Record the transaction
     cur.execute('INSERT INTO transaction_history (sender, recipient, amount) VALUES (%s, %s, %s)', (session['username'], recipient, amount))
@@ -128,5 +132,5 @@ def transfer_money():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port='80')
+    app.run(debug=True, host='0.0.0.0', port='5000')
 

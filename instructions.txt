@@ -28,4 +28,8 @@ Change the user and password field to reflect the username and password you crea
 mariadb_connection = mariadb.connect(user='chooseAUserName', password='chooseAPassword', database='Login')
 
 
+to run the app: 
 
+python3 main.py
+(or)
+python main.py

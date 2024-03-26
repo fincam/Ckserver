@@ -25,6 +25,8 @@ def do_login():
     if user and sha256_crypt.verify(password, user[1]):
         session['logged_in'] = True
         session['role'] = user[3]  # Get user role from database
+        session['name'] = user[5]
+        print(session['name'])
         session['username']=user[0] # Get username from database
         return redirect('/dashboard')
     else:
@@ -88,7 +90,10 @@ def transfer_money():
     recipient = request.form['recipient']
     amount = int(request.form['amount'])
     print(amount)
-
+    if amount < 1:
+        flash('Hacking is a seriou')
+        print("Hacking attempt detected !!! Hacker Name: " + session['name'])
+        return redirect('/dashboard')
     # Retrieve current user's balance
     cur = mariadb_connection.cursor(buffered=True)
     cur.execute('SELECT balance FROM Login WHERE username = %s', (session['username'],))
@@ -106,7 +111,6 @@ def transfer_money():
     # Check if the user has sufficient balance to transfer
     if amount > current_balance and session['role'] != 'Teacher':
         flash('Insufficient balance to transfer.')
-        print('brokie')
         return redirect('/dashboard')
 
     # Update sender's balance

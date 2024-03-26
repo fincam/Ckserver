@@ -1,0 +1,31 @@
+﻿Dependencies:
+
+Server OS: Linux
+Python 3 (with pip installed)
+MariaDB
+
+Install Python dependencies by running:
+
+pip install flask sql-connector passlib
+
+
+Run sudo mariadb and type this query in:
+
+CREATE USER username@localhost IDENTIFIED BY ‘password’;
+
+GRANT ALL PRIVILEGES ON *.* TO 'user'@localhost IDENTIFIED BY 'password';
+
+FLUSH PRIVILEGES;
+
+CREATE DATABASE Login;
+
+CREATE TABLE Login (username VARCHAR(256), password VARCHAR(256), email VARCHAR(256), role VARCHAR(10), balance INT, name VARCHAR(256), grade VARCHAR(256));
+
+CREATE TABLE transaction_history(sender VARCHAR(256), recipient VARCHAR(256), amount INT, time TIMESTAMP);
+
+Change the user and password field to reflect the username and password you created in the mariadb in main.py in this line of code:
+
+mariadb_connection = mariadb.connect(user='chooseAUserName', password='chooseAPassword', database='Login')
+
+
+

@@ -6,7 +6,7 @@ import re
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-mariadb_connection = mariadb.connect(user='chooseAUserName', password='chooseAPassword', database='Login')
+mariadb_connection = mariadb.connect(user='username', password='password', database='Login')
 
 @app.route('/')
 def index():

@@ -4,9 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+             <div class="alert">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                 {{ message }}
+</div>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
     <h1>Register</h1>
     <form action="/register" method="POST">
         <div>
@@ -64,5 +76,6 @@
             }
         });
     </script>
+    <a href="/">Already have an account? Log in.</a>
 </body>
 </html>

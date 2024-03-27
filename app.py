@@ -6,7 +6,7 @@ import re
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-mariadb_connection = mariadb.connect(user='username', password='password', database='Login')
+mariadb_connection = mariadb.connect(user='user', password='password', database='Login')
 
 @app.route('/')
 def index():
@@ -26,6 +26,7 @@ def do_login():
         session['logged_in'] = True
         session['role'] = user[3]  # Get user role from database
         session['name'] = user[5]
+        session['balance'] = user[4]
         print(session['name'])
         session['username']=user[0] # Get username from database
         return redirect('/dashboard')
@@ -58,9 +59,10 @@ def register():
         cur.execute('INSERT INTO Login (name, username, password, email, role, balance, grade) VALUES (%s, %s, %s, %s, %s, %s, %s)', (name, username, hashed_password, email, role, 0, grade))
         mariadb_connection.commit()
         cur.close()
-        
+
+        redirect('/')
         flash('Registration successful! Please log in.')
-        return redirect('/')
+
 
     return render_template('register.html')
 
@@ -73,27 +75,24 @@ def dashboard():
     cur = mariadb_connection.cursor(buffered=True)
     if not session.get('logged_in'):
         return redirect('/')
-    elif session.get('role') == 'student':
-        return render_template('student_dashboard.html')
     elif session.get('role') == 'teacher':
         return render_template('teacher_dashboard.html')
+    elif session.get('role') == 'student':
+        return render_template('student_dashboard.html')
     else:
         # Handle other roles or situations
         return redirect('/')
 
 @app.route('/transfer_money', methods=['POST'])
 def transfer_money():
-    if not session.get('logged_in'):
+    if not session.get('logged_in') or session.get('role') != 'teacher':
         flash('You need to be logged in to transfer money.')
         return redirect('/')
 
     recipient = request.form['recipient']
     amount = int(request.form['amount'])
     print(amount)
-    if amount < 1:
-        flash('Hacking is a seriou')
-        print("Hacking attempt detected !!! Hacker Name: " + session['name'])
-        return redirect('/dashboard')
+
     # Retrieve current user's balance
     cur = mariadb_connection.cursor(buffered=True)
     cur.execute('SELECT balance FROM Login WHERE username = %s', (session['username'],))
@@ -108,15 +107,49 @@ def transfer_money():
         flash('Recipient does not exist.')
         return redirect('/dashboard')
 
-    # Check if the user has sufficient balance to transfer
-    if amount > current_balance and session['role'] != 'Teacher':
-        flash('Insufficient balance to transfer.')
-        return redirect('/dashboard')
 
-    # Update sender's balance
-    new_balance_sender = current_balance - int(amount)
-    cur.execute('UPDATE Login SET balance = %s WHERE username = %s', (new_balance_sender, session['username']))
-    print('SET: %s WHERE: %s', (new_balance_sender, session['username'] ))
+    # Update recipient's balance
+    cur.execute('SELECT balance FROM Login WHERE username = %s', (recipient,))
+    recipient_balance = int(str(cur.fetchone()[0]))
+    new_balance_recipient = recipient_balance + int(amount)
+    cur.execute('UPDATE Login SET balance = %s WHERE username = %s', (new_balance_recipient, recipient))
+
+
+    # Record the transaction
+    cur.execute('INSERT INTO transaction_history (sender, recipient, amount) VALUES (%s, %s, %s)', (session['username'], recipient, amount))
+
+    mariadb_connection.commit()
+    cur.close()
+
+    flash(f'Successfully Awarded {amount} points to {recipient}.')
+    return redirect('/dashboard')
+
+
+@app.route('/deduct', methods=['POST'])
+def deduct_money():
+    if not session.get('logged_in') or session.get('role') != 'teacher':
+        flash('You need to be logged in to transfer money.')
+        return redirect('/')
+
+    recipient = request.form['recipient']
+    amount = int(request.form['amount'])
+    amount2 = amount
+    amount -= amount*2
+    print(amount)
+
+    # Retrieve current user's balance
+    cur = mariadb_connection.cursor(buffered=True)
+    cur.execute('SELECT balance FROM Login WHERE username = %s', (session['username'],))
+    current_balance = int(str(cur.fetchone()[0]))
+    print(current_balance)
+
+    # Check if the recipient exists
+    cur.execute('SELECT * FROM Login WHERE username = %s', (recipient,))
+    recipient_data = cur.fetchone()
+
+    if not recipient_data:
+        flash('Recipient does not exist.')
+        return redirect('/dashboard')
 
     # Update recipient's balance
     cur.execute('SELECT balance FROM Login WHERE username = %s', (recipient,))
@@ -125,14 +158,14 @@ def transfer_money():
     cur.execute('UPDATE Login SET balance = %s WHERE username = %s', (new_balance_recipient, recipient))
 
     # Record the transaction
-    cur.execute('INSERT INTO transaction_history (sender, recipient, amount) VALUES (%s, %s, %s)', (session['username'], recipient, amount))
+    cur.execute('INSERT INTO transaction_history (sender, recipient, amount) VALUES (%s, %s, %s)',
+                (session['username'], recipient, amount))
 
     mariadb_connection.commit()
     cur.close()
 
-    flash(f'Successfully transferred {amount} to {recipient}.')
+    flash(f'Successfully deducted {amount2} points from {recipient}.')
     return redirect('/dashboard')
-
 
 
 if __name__ == '__main__':

@@ -21,7 +21,7 @@ CREATE DATABASE Login;
 
 CREATE TABLE Login (username VARCHAR(256), password VARCHAR(256), email VARCHAR(256), role VARCHAR(10), balance INT, name VARCHAR(256), grade VARCHAR(256));
 
-CREATE TABLE transaction_history(sender VARCHAR(256), recipient VARCHAR(256), amount INT, time TIMESTAMP);
+CREATE TABLE transaction_history(sender VARCHAR(256), recipient VARCHAR(256), amount INT, time DATETIME DEFAULT CURRENT_TIMESTAMP);
 
 Change the user and password field to reflect the username and password you created in the mariadb in main.py in this line of code:
 

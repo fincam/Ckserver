@@ -3,26 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher
-     Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <title>Teacher Dashboard</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
     <h1>Welcome to the Student Dashboard, {{ session['name'] }}</h1>
-    <h2>Transfer Points
-    </h2>
-    <form action="/transfer_money" method="POST">
-        <div>
-            <label for="recipient">Recipient Username:</label>
-            <input type="text" id="recipient" name="recipient" required>
-        </div>
-        <div>
-            <label for="amount">Amount:</label>
-            <input type="number" id="amount" name="amount" min="1" required>
-        </div>
-        <button type="submit">Transfer Point</button>
-    </form>
-    <br>
-    <a href="/">Logout</a>
+    <h1> You have a balance of: {{ session['balance'] }}</h1>
 </body>
 </html>

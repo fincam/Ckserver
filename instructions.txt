@@ -23,13 +23,16 @@ CREATE TABLE Login (username VARCHAR(256), password VARCHAR(256), email VARCHAR(
 
 CREATE TABLE transaction_history(sender VARCHAR(256), recipient VARCHAR(256), amount INT, time DATETIME DEFAULT CURRENT_TIMESTAMP);
 
-Change the user and password field to reflect the username and password you created in the mariadb in main.py in this line of code:
+Change the user and password field to reflect the username and password you created in the mariadb in app.py in this line of code:
 
 mariadb_connection = mariadb.connect(user='chooseAUserName', password='chooseAPassword', database='Login')
 
 
 to run the app: 
 
-python3 main.py
+python3 app.py
 (or)
-python main.py
+python app.py
+(or)
+cd (location of the folder)
+flask run

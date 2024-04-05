@@ -5,20 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <style>
+/* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+/* Page title styles */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form container styles */
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Input label styles */
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Input styles */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Button styles */
+button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Alert container styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+/* Password rule popup styles */
+#password-rule {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Link styles */
+a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+    </style>
 </head>
 <body>
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
+    <div class="container">
+
         <ul class=flashes>
-        {% for message in messages %}
+        
              <div class="alert">
-  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                 {{ message }}
+  <span class="closebtn" onclick="this.parentElement.style.display='none';"></span>
+                
 </div>
-        {% endfor %}
+        
         </ul>
-    {% endif %}
-{% endwith %}
+    
+
     <h1>Register</h1>
     <form action="/register" method="POST">
         <div>
@@ -49,10 +144,6 @@
         <div>
             <label for="grade">Grade:</label>
             <select id="grade" name="grade">
-                <option value="LKG">LKG</option>
-                <option value="UKG">UKG</option>
-                <option value="Grade 1">Grade 1</option>
-                <option value="Grade 2">Grade 2</option>
                 <option value="Grade 3">Grade 3</option>
                 <option value="Grade 4">Grade 4</option>
                 <option value="Grade 5">Grade 5</option>
@@ -76,6 +167,7 @@
             }
         });
     </script>
-    <a href="/">Already have an account? Log in.</a>
+    <a href="C:\Users\ranja\OneDrive\Documents\PBL\templates\login.html">Already have an account? Log in.</a>
+</div>
 </body>
 </html>

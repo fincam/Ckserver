@@ -1,95 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login or Register</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
     <style>
 body {
-	background: linear-gradient(to right, #ff9966, #ff5e62);
-	margin: 0;
-	padding: 0;
-	font-family: Arial, sans-serif;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
 }
 
-.container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
+h1 {
+    text-align: center;
 }
 
-.login-form {
-	background: white;
-	padding: 40px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	border-radius: 4px;
+form {
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-	text-align: center;
-	margin-bottom: 30px;
-	color: #ff5e62;
+form div {
+    margin-bottom: 15px;
 }
 
-label {
-	display: block;
-	margin-bottom: 10px;
-	font-weight: bold;
+form label {
+    display: block;
+    font-weight: bold;
 }
 
-input[type="text"],
-input[type="password"] {
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	box-sizing: border-box;
-	margin-bottom: 20px;
+form input[type="text"],
+form input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
 button[type="submit"] {
-	background: #ff5e62;
-	color: white;
-	padding: 10px 20px;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 button[type="submit"]:hover {
-	background: #ff3349;
+    background-color: #0056b3;
 }
 
-p {
-	text-align: center;
-	margin-top: 20px;
-	font-size: 14px;
-	color: #666;
+a {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
 }
 
-p a {
-	color: #ff5e62;
-	text-decoration: none;
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
 }
+
+.closebtn {
+    margin-left: 15px;
+    color: #333;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: #000;
+}
+
     </style>
 </head>
-<body> 
-	<div class="container">
-		<div class="login-form">
-			<h2>Login</h2>
-			<form id="login-form">
-            <form action="/login" method="POST">
-				<label for="username">Username:</label>
-				<input type="text" id="username" name="username" required>
-				<label for="password">Password:</label>
-				<input type="password" id="password" name="password" required>
-				<button type="submit">Login</button>
-            </form>
-            </form>
-			<p>Not a member yet? <a href="/register">Register here</a></p>
-		</div>
-	</div>
+<body>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+             <div class="alert">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                 {{ message }}
+</div>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+    <h1>Login</h1>
+    <form action="/login" method="POST">
+        <div>
+            <label for="login-username">Username:</label>
+            <input type="text" id="login-username" name="username" required>
+        </div>
+        <div>
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    <a href="/register">Don't have an account? Register.</a>
 </body>
 </html>
-
-    

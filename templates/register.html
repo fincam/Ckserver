@@ -102,6 +102,19 @@ a:hover {
     </style>
 </head>
 <body>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+             <div class="alert">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                 {{ message }}
+</div>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
     <div class="container">
 
         <ul class=flashes>

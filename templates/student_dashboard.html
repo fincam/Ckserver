@@ -1,14 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="shortcut icon" href="C:\Users\ranja\OneDrive\Documents\PBL/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Dashboard</title>
-
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <title>Student Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 8px 8px 0 0;
+        }
+        .dashboard-content {
+            padding: 20px;
+        }
+        .dashboard-item {
+            margin-bottom: 10px;
+        }
+        .dashboard-item b {
+            color: #3498db;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Student Dashboard, {{ session['name'] }}</h1>
-    <h1> You have a balance of: {{ session['balance'] }}</h1>
+    <div class="container">
+        <div class="header">
+            <h2>Welcome to the Student Dashboard, {{ session['name'] }}</h2>
+        </div>
+        <div class="dashboard-content">
+            <div class="dashboard-item">
+                <p><b>Your Balance:</b> {{ session['balance'] }}</p>
+            </div>
+            <!-- Add more dashboard items here -->
+        </div>
+    </div>
 </body>
 </html>
